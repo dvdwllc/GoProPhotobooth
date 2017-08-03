@@ -1,6 +1,7 @@
 lib/
 bin/
 include/
+.idea/
 .Python
 pip-selfcheck.json
 *.pyc
