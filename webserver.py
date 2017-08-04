@@ -1,7 +1,7 @@
 import os
 import json
 
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 
 
 app = Flask(__name__, static_folder='templates/assets', static_url_path='/static')
@@ -14,6 +14,7 @@ def booth():
     elif request.method == 'POST':
         from settings import BOOTH
         BOOTH.take_photo()
+        BOOTH.get_photos_from_device()
 
         return render_template('booth.html')
 
