@@ -3,6 +3,7 @@ bin/
 include/
 .idea/
 .Python
+_secret.py
 pip-selfcheck.json
 *.pyc
 *.DS_Store
