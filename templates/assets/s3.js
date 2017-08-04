@@ -14,35 +14,58 @@ var s3 = new AWS.S3({
   params: {Bucket: albumBucketName}
 });
 
-var params = {
-  Bucket: 'groove-booth', /* required */
-};
+var MAX_N_FILES = 6
+var currentFiles = []  // All images currently in slideshow
+var timeoutHasBeenSet = false
 
-var currentFiles = []
+function getNewImages() {
+  s3.listObjects(
+    {Bucket: albumBucketName}, 
+    function(err, data) {
+      if (err) console.log(err, err.stack); // an error occurred
+      else {
 
-function encode(data)
-{
-    var str = data.reduce(function(a,b){ return a+String.fromCharCode(b) },'');
-    return btoa(str).replace(/.{76}(?=.)/g,'$&\n');
-}
+        console.log("Searching for new images");
 
-s3.listObjects(params, function(err, data) {
-  if (err) console.log(err, err.stack); // an error occurred
-  else {
-    var availableFiles = data.Contents;  // successful response
-    for (i=0; i<availableFiles.length; i++) {
-      if (currentFiles.indexOf(availableFiles[i].Key) === -1) {
-        currentFiles.push(availableFiles[i].Key);
-        console.log(currentFiles)
-        s3.getObject({Key: availableFiles[i].Key},function(err,file){
-          $timeout(
-            function(){
-              $scope.s3url = "data:image/jpeg;base64," + encode(file.Body);
-            },
-            1
-          )
-        });
+        var availableFiles = data.Contents;  // successful response
+
+        for (i=0; i<availableFiles.length; i++) {
+
+          if (currentFiles.indexOf(availableFiles[i].Key) === -1) {
+            currentFiles.push(availableFiles[i].Key);
+
+            var img_div = jQuery(
+              "<div></div>", 
+              {
+                class: "mySlides fade"
+              }
+            );
+
+            var img_link = jQuery(
+              "<img></img>", 
+              {
+                src: "http://s3-us-west-2.amazonaws.com/groove-booth/" + availableFiles[i].Key,
+                style: "width:100%"
+              }
+            );
+
+            img_link.appendTo(img_div)
+            img_div.appendTo($(".slideshow-container"))
+          };
+        };
+        
+        if ($(".slideshow-container").children().length > MAX_N_FILES) {
+          $(".mySlides").first().remove();
+        }
+
+        if (!timeoutHasBeenSet) {
+          setInterval(getNewImages, 60000);  // search for new images every minute
+          timeoutHasBeenSet = true;
+        };
+        
       };
-    };
-  };
+  });
 };
+
+getNewImages();
+
