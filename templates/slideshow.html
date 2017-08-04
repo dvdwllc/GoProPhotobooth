@@ -6,27 +6,26 @@
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="assets/style.css">
-    <script type="text/javascript" src="assets/actions.js"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.77.0.min.js"></script>
     <script src="assets/s3.js"></script>
     <script type="text/javascript" src="assets/jquery.min.js"></script>
     <script type="text/javascript" src="assets/actions.js"></script>
+    <script type="text/javascript" src="assets/lodash.js"></script>
 </head>
 <body>
-  <div class="slideshow-container">
+  <div class="slideshow-container" name="slideshow">
     <div class="mySlides fade">
       <img src="https://s3-us-west-2.amazonaws.com/groove-booth/GOPR0505.JPG" style="width:100%">
     </div>
 
+    <div class="mySlides fade">
+      <img src="https://scontent-sea1-1.xx.fbcdn.net/v/t31.0-8/18556802_10211273493944605_8331381727097587808_o.jpg?oh=dab181accd1a4dea8838b6066069f7f7&oe=59F21756" style="width:100%">
+    </div>
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>
   </div>
   <br>
 
-  <div style="text-align:center">
-    <span class="dot" onclick="currentSlide(1)"></span> 
-    <span class="dot" onclick="currentSlide(2)"></span> 
-    <span class="dot" onclick="currentSlide(3)"></span> 
-  </div>
+  <script type="text/javascript" src="assets/actions.js"></script>
 </body>
 </html>
