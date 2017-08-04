@@ -14,7 +14,9 @@ var s3 = new AWS.S3({
   params: {Bucket: albumBucketName}
 });
 
+var MAX_N_FILES = 6
 var currentFiles = []  // All images currently in slideshow
+var timeoutHasBeenSet = false
 
 function getNewImages() {
   s3.listObjects(
@@ -22,6 +24,8 @@ function getNewImages() {
     function(err, data) {
       if (err) console.log(err, err.stack); // an error occurred
       else {
+
+        console.log("Searching for new images");
 
         var availableFiles = data.Contents;  // successful response
 
@@ -47,11 +51,18 @@ function getNewImages() {
 
             img_link.appendTo(img_div)
             img_div.appendTo($(".slideshow-container"))
-
-            console.log(img_div)
           };
         };
-        console.log(currentFiles);
+        
+        if ($(".slideshow-container").children().length > MAX_N_FILES) {
+          $(".mySlides").first().remove();
+        }
+
+        if (!timeoutHasBeenSet) {
+          setInterval(getNewImages, 60000);  // search for new images every minute
+          timeoutHasBeenSet = true;
+        };
+        
       };
   });
 };
